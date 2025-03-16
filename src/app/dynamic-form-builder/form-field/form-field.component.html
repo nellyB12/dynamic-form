@@ -1,0 +1,121 @@
+@if(isVisible()) {
+    <div class="field-container d-flex flex-column">
+        @switch (field().type) {
+            @case (fieldType.Text) {
+                <ng-container [formGroup]="form()">
+                    <label class="form-label" [for]="field().name">{{ field().label }}</label>
+                    <input [formControlName]="field().name" [name]="field().name" [id]="field().name" type="text" [placeholder]="field().placeholder" />
+                    <app-field-error
+                        [validations]="field().validations"
+                        [errors]="form().get(field().name)?.errors ?? null"
+                        [visible]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                    ></app-field-error>
+                </ng-container>
+            }
+            @case (fieldType.Textarea) {
+                <ng-container [formGroup]="form()">
+                    <label class="form-label" [for]="field().name">{{ field().label }}</label>
+                    <textarea [formControlName]="field().name" [name]="field().name" [id]="field().name" rows="4" cols="300" [placeholder]="field().placeholder"></textarea>
+                    <app-field-error
+                        [validations]="field().validations"
+                        [errors]="form().get(field().name)?.errors ?? null"
+                        [visible]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                    ></app-field-error>
+                </ng-container>
+            }
+            @case (fieldType.Dropdown) {
+                <ng-container [formGroup]="form()">
+                    <label class="form-label" [for]="field().name">{{ field().label }}</label>
+                    <select [name]="field().name" [id]="field().name" [formControlName]="field().name">
+                        @for(option of field().options; track option.value) {
+                            <option [value]="option.value">{{ option.label }}</option>
+                        }
+                    </select>
+                    <app-field-error
+                        [validations]="field().validations"
+                        [errors]="form().get(field().name)?.errors ?? null"
+                        [visible]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                    ></app-field-error>
+                </ng-container>
+            }
+            @case (fieldType.Checkbox) {
+                <ng-container [formGroup]="form()">
+                    @if(field().label && field().options && field().options!.length > 1) {
+                        <h5>{{ field().label }}</h5>
+                        @for(option of field().options; track option.value) {
+                            <div class="checkbox-wrapper d-flex align-items-center">
+                                <input [name]="option.value" [id]="option.value" type="checkbox" (click)="onCheckboxChange($event, field().name, option.value)" />
+                                <label [for]="option.value">{{ option.label }}</label>
+                            </div>
+                        }
+                        <app-field-error
+                            [validations]="field().validations"
+                            [errors]="form().get(field().name)?.errors ?? null"
+                            [visible]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                        ></app-field-error>
+                    } @else if(field().options!.length == 1) {
+                        <div class="checkbox-wrapper d-flex align-items-center">
+                            <input [formControlName]="field().name" [name]="field().name" [id]="field().name" [value]="field().options![0].value" type="checkbox" />
+                            <label class="form-label" [for]="field().name">{{ field().options![0].label }}</label>
+                        </div>
+                        <app-field-error
+                            [validations]="field().validations"
+                            [errors]="form().get(field().name)?.errors ?? null"
+                            [visible]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                        ></app-field-error>
+                    }
+                </ng-container>
+            }
+            @case (fieldType.Radio) {
+                <ng-container [formGroup]="form()">
+                    @if(field().label && field().options!.length > 1) {
+                        <h5>{{ field().label }}</h5>
+                        @for(option of field().options; track option.value) {
+                            <div class="radio-wrapper d-flex align-items-center">
+                                <input [formControlName]="field().name" [name]="field().name" [id]="option.value" [value]="option.value" type="radio" />
+                                <label [for]="option.value">{{ option.label }}</label>
+                            </div>
+                        }
+                        <app-field-error
+                            [validations]="field().validations"
+                            [errors]="form().get(field().name)?.errors ?? null"
+                            [visible]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                        ></app-field-error>
+                    } @else if(field().options!.length == 1) {
+                        <div class="radio-wrapper d-flex align-items-center">
+                            <input [formControlName]="field().name" [name]="field().name" [id]="field().name" [value]="field().options![0].value" type="radio" />
+                            <label class="form-label" [for]="field().name">{{ field().options![0].label }}</label>
+                        </div>
+                        <app-field-error
+                            [validations]="field().validations"
+                            [errors]="form().get(field().name)?.errors ?? null"
+                            [visible]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                        ></app-field-error>
+                    }
+                </ng-container>
+            }
+            @case (fieldType.TextCustomValidation) {
+                <ng-container [formGroup]="form()">
+                    <label class="form-label" [for]="field().name">{{ field().label }}</label>
+                    <input [formControlName]="field().name" [name]="field().name" [id]="field().name" type="text" [placeholder]="field().placeholder" />
+                    <app-field-error
+                        [validations]="field().validations"
+                        [errors]="form().get(field().name)?.errors ?? null"
+                        [visible]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                    ></app-field-error>
+                </ng-container>
+            }
+            @case (fieldType.Group) {
+                <fieldset [formGroup]="nestedForm()">
+                    <legend>{{field().label}}</legend>
+                    @for(subField of field().fields; track subField.name) {
+                        <app-form-field
+                            [field]="subField"
+                            [form]="nestedForm()"
+                        ></app-form-field>
+                    }
+                </fieldset>
+            }
+        }
+    </div>
+}

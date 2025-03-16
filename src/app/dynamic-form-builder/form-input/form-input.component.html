@@ -1,0 +1,22 @@
+<div class="d-flex flex-column">
+    <label class="form-label" [htmlFor]="'formInput'">JSON schema:</label>
+    <ngx-codemirror
+        [ngModel]="schemaContent()"
+        (ngModelChange)="onChangeSchemaContent($event)"
+        [name]="'schemaContent'"
+        [id]="'formInput'"
+        [autoFocus]="true"
+        [preserveScrollPosition]="true"
+        [options]="{
+            lineNumbers: true,
+            theme: 'material',
+            mode: {
+                name: 'javascript',
+                json: true
+            }
+        }"
+    ></ngx-codemirror>
+    @if(schemaContentError()) {
+        <span class="error">{{ schemaContentError() }}</span>
+    }
+</div>

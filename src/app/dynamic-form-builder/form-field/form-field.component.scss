@@ -1,0 +1,50 @@
+$label-color: #4a4a4a;
+$section-title-color: #6a6a6a;
+
+label {
+    font-size: 14px;
+    line-height: 1.2;
+    color: $label-color;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+textarea,
+select {
+    width: 100%;
+}
+
+h5 {
+    color: $section-title-color;
+}
+
+.field-container {
+    margin-bottom: 24px;
+    .radio-wrapper {
+        margin-bottom: 4px;
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+        label {
+            padding-left: 8px;
+            margin-bottom: 0;
+        }
+    }
+    .checkbox-wrapper {
+        margin-bottom: 4px;
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+        label {
+            padding-left: 8px;
+            margin-bottom: 0;
+        }
+    }
+
+    fieldset {
+        legend {
+            float: none;
+        }
+    }
+}
