@@ -1,0 +1,13 @@
+<div class="dynamic-form-wrapper">
+    @if(fields().length > 0 && form.controls) {
+        <form [formGroup]="form">
+            @if(formName()) {
+                <h3 class="form-title">{{ formName() }}</h3>
+            }
+            @for(field of fields(); track field.name) {
+                <app-form-field [field]="field" [form]="form"></app-form-field>
+            }
+            <button type="submit" [disabled]="form.invalid" (click)="onSubmit()">{{ buttonLabel() }}</button>
+        </form>
+    }
+</div>

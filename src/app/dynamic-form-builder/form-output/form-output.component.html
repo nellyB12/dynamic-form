@@ -1,0 +1,20 @@
+<div class="d-flex flex-column">
+    <label class="form-label" [htmlFor]="'formOutput'">JSON result:</label>
+    <ngx-codemirror
+        [ngModel]="schemaResult()"
+        (ngModelChange)="onChangeSchemaResult($event)"
+        [name]="'schemaResult'"
+        [id]="'formOutput'"
+        [autoFocus]="true"
+        [preserveScrollPosition]="true"
+        [options]="{
+            lineNumbers: true,
+            theme: 'material',
+            mode: {
+                name: 'javascript',
+                json: true
+            },
+            readOnly: true
+        }"
+    ></ngx-codemirror>
+</div>
