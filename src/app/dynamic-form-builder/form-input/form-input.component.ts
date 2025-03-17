@@ -14,40 +14,10 @@ import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
 export class FormInputComponent implements OnInit {
   public schemaContent = signal<string>('');
   public schemaContentError = signal<string | null>(null);
-  public initialSchemaContent: string = `{
-    "name": "Basic form",
-    "button": "Next",
-    "fields": [
-	    {
-	      "name": "firstName",
-	      "type": "text",
-	      "inputType": "string",
-	      "label": "First name",
-	      "placeholder": "John Doe",
-	      "value": "",
-        "visible": true,
-        "validations": [
-          {
-            "type": "required",
-            "message": "First name is required"
-          },
-          {
-            "type": "minLength",
-            "value": "2",
-            "message": "First name should be at least 2 characters"
-          }
-        ]
-      }
-    ]
-  }`;
 
   constructor(private dynamicFormBuilderService: DynamicFormBuilderService) {}
 
-  ngOnInit() {
-    // only for testing
-    this.schemaContent.set(this.initialSchemaContent);
-    this.dynamicFormBuilderService.currentState = JSON.parse(this.initialSchemaContent);
-  }
+  ngOnInit() {}
 
   onChangeSchemaContent(value: string) {
     this.schemaContent.set(value);

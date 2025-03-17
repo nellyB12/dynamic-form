@@ -21,26 +21,6 @@ h5 {
 
 .field-container {
     margin-bottom: 24px;
-    .radio-wrapper {
-        margin-bottom: 4px;
-        &:last-of-type {
-            margin-bottom: 0;
-        }
-        label {
-            padding-left: 8px;
-            margin-bottom: 0;
-        }
-    }
-    .checkbox-wrapper {
-        margin-bottom: 4px;
-        &:last-of-type {
-            margin-bottom: 0;
-        }
-        label {
-            padding-left: 8px;
-            margin-bottom: 0;
-        }
-    }
 
     fieldset {
         legend {

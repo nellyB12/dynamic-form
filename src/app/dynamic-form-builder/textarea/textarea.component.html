@@ -1,0 +1,16 @@
+<textarea
+    [ngModel]="value"
+    (ngModelChange)="onValueChange($event)"
+    [name]="name()"
+    [id]="id()"
+    rows="4"
+    cols="300"
+    [placeholder]="placeholder()"
+    autocomplete="off"
+    pTextarea
+    pSize="small"
+    autoResize="true"
+    fluid="true"
+    (blur)="onBlur()"
+    [ngClass]="{'invalid': isInvalid()}"
+></textarea>

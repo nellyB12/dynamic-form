@@ -7,7 +7,11 @@
             @for(field of fields(); track field.name) {
                 <app-form-field [field]="field" [form]="form"></app-form-field>
             }
-            <button type="submit" [disabled]="form.invalid" (click)="onSubmit()">{{ buttonLabel() }}</button>
+            <app-button
+                [label]="buttonLabel() || ''"
+                [disabled]="form.invalid"
+                (btnClick)="onSubmit()"
+            ></app-button>
         </form>
     }
 </div>

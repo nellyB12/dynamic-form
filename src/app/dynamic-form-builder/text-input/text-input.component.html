@@ -1,0 +1,14 @@
+<input
+    [ngModel]="value"
+    (ngModelChange)="onValueChange($event)"
+    [name]="name()"
+    [id]="id()"
+    type="text"
+    [placeholder]="placeholder()"
+    (blur)="onBlur()"
+    [ngClass]="{'invalid': isInvalid()}"
+    pInputText
+    pSize="small"
+    fluid="true"
+    autocomplete="off"
+/>
