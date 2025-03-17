@@ -5,10 +5,11 @@ import { State, FormField, FieldType } from '../dynamic-form-builder.model';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormFieldComponent } from '../form-field/form-field.component';
+import { ButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-dynamic-form',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, FormFieldComponent],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, FormFieldComponent, ButtonComponent],
   templateUrl: './dynamic-form.component.html',
   styleUrl: './dynamic-form.component.scss'
 })
@@ -21,8 +22,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   public readonly defaultButtonLabel = 'Submit';
   public readonly fieldType = FieldType;
 
-  constructor(private dynamicFormBuilderService: DynamicFormBuilderService) {
-  }
+  constructor(private dynamicFormBuilderService: DynamicFormBuilderService) {}
 
   ngOnInit() {
     this.subscription.add(this.dynamicFormBuilderService.currentState$.subscribe({
@@ -47,9 +47,5 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     } else {
       console.log("form invalid");
     }
-  }
-
-  public getFormGroup(field: FormField) {
-    return this.form.get(field.name) as FormGroup;
   }
 }

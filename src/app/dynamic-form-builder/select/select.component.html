@@ -1,0 +1,14 @@
+<p-select
+    [ngModel]="selectedOption"
+    (ngModelChange)="onSelectedOptionChange($event)"
+    [name]="name()"
+    [id]="id()"
+    [options]="options()"
+    [optionLabel]="'label'"
+    [placeholder]="placeholder()"
+    [showClear]="true"
+    [size]="'small'"
+    [fluid]="true"
+    [ngClass]="{'ng-dirty ng-invalid': isInvalid()}"
+    (onBlur)="onBlur()"
+></p-select>

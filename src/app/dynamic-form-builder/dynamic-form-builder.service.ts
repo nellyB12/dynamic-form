@@ -46,8 +46,11 @@ export class DynamicFormBuilderService {
     });
   }
 
-  private getCheckboxValues(field: FormField): string[] {
-    return field.options?.filter(option => option.checked).map(option => option.value) || [];
+  private getCheckboxValues(field: FormField): string[] | boolean {
+    if(field.options && field.options?.length > 0) {
+      return field.options?.filter(option => option.checked).map(option => option.value) || [];
+    }
+    return field.value || false;
   }
 
   public prepareFormResultAsJSON(formValue: any): string {

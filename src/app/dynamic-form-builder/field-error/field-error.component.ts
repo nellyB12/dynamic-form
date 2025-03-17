@@ -1,5 +1,5 @@
 import { Component, input, computed } from '@angular/core';
-import { Validation } from '../dynamic-form-builder.model';
+import { Validation, ValidationType } from '../dynamic-form-builder.model';
 import { ValidationErrors } from '@angular/forms';
 
 @Component({
@@ -17,6 +17,10 @@ export class FieldErrorComponent {
       return '';
     }
     const currentErrorKey = Object.keys(this.errors()!)[0];
+    if(currentErrorKey == 'required') {
+      const validationObj = this.validations().find((rule) => String(rule.type).toLowerCase() === ValidationType.Required.toLowerCase()) || this.validations().find((rule) => String(rule.type).toLowerCase() === ValidationType.RequiredTrue.toLowerCase());
+      return validationObj?.message ?? '';
+    }
     return this.validations().find((rule) => String(rule.type).toLowerCase() === currentErrorKey.toLowerCase())?.message;
   });
 

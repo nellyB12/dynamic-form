@@ -1,0 +1,7 @@
+$invalid-border: #ff0044;
+
+input {
+    &.invalid {
+        border: 1px solid $invalid-border;
+    }
+}

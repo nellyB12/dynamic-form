@@ -1,0 +1,7 @@
+$invalid-border: #ff0044;
+
+textarea {
+    &.invalid {
+        border: 1px solid $invalid-border;
+    }
+}

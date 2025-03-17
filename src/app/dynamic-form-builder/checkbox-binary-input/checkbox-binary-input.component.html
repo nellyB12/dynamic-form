@@ -1,0 +1,12 @@
+<div class="checkbox-wrapper d-flex align-items-center">
+    <p-checkbox
+        [ngModel]="value"
+        (ngModelChange)="onValueChange($event)"
+        [name]="name()"
+        [inputId]="id()"
+        [binary]="true"
+        size="small"
+        (onBlur)="onBlur()"
+    ></p-checkbox>
+    <label class="form-label" [for]="id()">{{ label() }}</label>
+</div>
