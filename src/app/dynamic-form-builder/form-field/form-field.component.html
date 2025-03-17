@@ -1,14 +1,19 @@
 @if(isVisible()) {
     <div class="field-container d-flex flex-column">
         @if(field().type === fieldType.Group) {
-            <fieldset [formGroup]="nestedForm()">
+            <fieldset [formGroup]="nestedForm()" class="mb-3">
                 <legend>{{ field().label }}</legend>
+                <div class="row {{ rowClassName() }}">
                 @for(subField of field().fields; track subField.name) {
-                    <app-form-field
-                        [field]="subField"
-                        [form]="nestedForm()"
-                    ></app-form-field>
+                    <div class="{{ getFieldClassName(subField) }}">
+                        <app-form-field
+                            [field]="subField"
+                            [form]="nestedForm()"
+                            [layout]="layout()"
+                        ></app-form-field>
+                    </div>
                 }
+                </div>
             </fieldset>
         } @else {
             <ng-container [formGroup]="form()">
@@ -52,12 +57,12 @@
                     }
                     @case (fieldType.Checkbox) {
                         @if(field().options && field().options!.length > 0) {
-                            <h5 *ngIf="field().label">
+                            <h6 *ngIf="field().label">
                                 {{ field().label }}
                                 @if(field().required) {
                                     *
                                 }
-                            </h5>
+                            </h6>
                             <app-checkbox-input
                                 [formControlName]="field().name"
                                 [name]="field().name"
@@ -74,12 +79,12 @@
                     }
                     @case (fieldType.Radio) {
                         @if(field().options!.length > 1) {
-                            <h5 *ngIf="field().label">
+                            <h6 *ngIf="field().label">
                                 {{ field().label }}
                                 @if(field().required) {
                                     *
                                 }
-                            </h5>
+                            </h6>
                         }
                         <app-radio-input
                             [formControlName]="field().name"

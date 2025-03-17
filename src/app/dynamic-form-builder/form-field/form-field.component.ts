@@ -1,6 +1,6 @@
 import { Component, input, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FieldType, FormField } from '../dynamic-form-builder.model';
+import { FieldType, FormField, Layout } from '../dynamic-form-builder.model';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldErrorComponent } from '../field-error/field-error.component';
 import { TextInputComponent } from '../text-input/text-input.component';
@@ -9,6 +9,7 @@ import { RadioInputComponent } from '../radio-input/radio-input.component';
 import { CheckboxInputComponent } from "../checkbox-input/checkbox-input.component";
 import { CheckboxBinaryInputComponent } from "../checkbox-binary-input/checkbox-binary-input.component";
 import { SelectComponent } from '../select/select.component';
+import { LayoutFactoryService } from '../layout-factory.service';
 
 @Component({
   selector: 'app-form-field',
@@ -19,6 +20,21 @@ import { SelectComponent } from '../select/select.component';
 export class FormFieldComponent {
   public field = input.required<FormField>();
   public form = input.required<FormGroup>();
+  public layout = input<Layout | null>();
+  public rowClassName = computed(() => {
+    if(!this.layout()?.gutters) {
+      return 'gx-3 gy-4';
+    }
+    const horizontalGutter = this.layout()?.gutters?.horizontal;
+    const verticalGutter = this.layout()?.gutters?.vertical;
+    if(horizontalGutter == 0 && verticalGutter == 0) {
+      return 'g-0';
+    }
+    if(horizontalGutter === verticalGutter) {
+      return `g-${horizontalGutter}`;
+    }
+    return `gx-${horizontalGutter} gy-${verticalGutter}`;
+  });
   public isVisible = computed(() => this.field()?.visible ?? true);
   public nestedForm = computed(() => this.form().get(this.field().name)! as FormGroup);
   public labelVisible = computed(() => {
@@ -31,7 +47,7 @@ export class FormFieldComponent {
   public readonly fieldType = FieldType;
   public readonly defaultDropdownPlaceholder = 'Please select';
 
-  constructor() {}
+  constructor(private layoutFactoryService: LayoutFactoryService) {}
 
   public onCheckboxChange(event: Event, fieldName: string, optionValue: string) {
     const control = this.form().get(fieldName);
@@ -46,5 +62,9 @@ export class FormFieldComponent {
       }
     }
     control?.setValue(currentValue);
+  }
+
+  public getFieldClassName(field: FormField) {
+    return this.layoutFactoryService.getColumnClassName(field.width, this.layout()?.breakpoint);
   }
 }
