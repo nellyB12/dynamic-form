@@ -15,16 +15,17 @@ select {
     width: 100%;
 }
 
-h5 {
+h6 {
     color: $section-title-color;
+    font-weight: 500;
+    margin-bottom: 0;
 }
 
 .field-container {
-    margin-bottom: 24px;
-
     fieldset {
         legend {
             float: none;
+            color: $section-title-color;
         }
     }
 }

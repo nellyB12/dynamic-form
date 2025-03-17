@@ -1,11 +1,12 @@
-import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
-import { State, FormField, FieldType } from '../dynamic-form-builder.model';
+import { State, FormField, FieldType, Layout } from '../dynamic-form-builder.model';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormFieldComponent } from '../form-field/form-field.component';
 import { ButtonComponent } from '../button/button.component';
+import { LayoutFactoryService } from '../layout-factory.service';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -18,11 +19,26 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   public fields = signal<FormField[]>([]);
   public formName = signal<string | null>(null);
   public buttonLabel = signal<string | null>(null);
+  public layout = signal<Layout | null>(null);
+  public rowClassName = computed(() => {
+    if(!this.layout()?.gutters) {
+      return 'gx-3 gy-4';
+    }
+    const horizontalGutter = this.layout()?.gutters?.horizontal;
+    const verticalGutter = this.layout()?.gutters?.vertical;
+    if(horizontalGutter == 0 && verticalGutter == 0) {
+      return 'g-0';
+    }
+    if(horizontalGutter === verticalGutter) {
+      return `g-${horizontalGutter}`;
+    }
+    return `gx-${horizontalGutter} gy-${verticalGutter}`;
+  });
   public form!: FormGroup;
   public readonly defaultButtonLabel = 'Submit';
   public readonly fieldType = FieldType;
 
-  constructor(private dynamicFormBuilderService: DynamicFormBuilderService) {}
+  constructor(private dynamicFormBuilderService: DynamicFormBuilderService, private layoutFactoryService: LayoutFactoryService) {}
 
   ngOnInit() {
     this.subscription.add(this.dynamicFormBuilderService.currentState$.subscribe({
@@ -30,6 +46,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         this.fields.set(currentState?.fields ?? []);
         this.formName.set(currentState?.name ?? '');
         this.buttonLabel.set(currentState?.button ?? this.defaultButtonLabel);
+        this.layout.set(currentState?.layout ?? null);
         if(currentState) {
           this.form = this.dynamicFormBuilderService.createNewForm(currentState);
         }
@@ -47,5 +64,9 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     } else {
       console.log("form invalid");
     }
+  }
+
+  public getFieldClassName(field: FormField) {
+    return this.layoutFactoryService.getColumnClassName(field.width, this.layout()?.breakpoint);
   }
 }
