@@ -45,4 +45,10 @@ export class RadioInputComponent implements ControlValueAccessor {
       this.onTouched();
     }
   }
+
+  public onBlur() {
+    if(this.onTouched) {
+      this.onTouched();
+    }
+  }
 }

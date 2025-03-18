@@ -1,11 +1,17 @@
 .dynamic-form-wrapper {
-    padding: 15px 30px;
+    padding: 15px;
     width: 100%;
 
     .form-title {
-        font-size: 30px;
+        font-size: 22px;
         line-height: 1.2;
         margin-top: 0;
-        margin-bottom: 24px;
+        margin-bottom: 12px;
+        @media(min-width: 1200px) {
+            font-size: 30px;
+            line-height: 1.2;
+            margin-top: 0;
+            margin-bottom: 24px;
+        }
     }
 }

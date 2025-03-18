@@ -1,114 +1,112 @@
-@if(isVisible()) {
-    <div class="field-container d-flex flex-column">
-        @if(field().type === fieldType.Group) {
-            <fieldset [formGroup]="nestedForm()" class="mb-3">
-                <legend>{{ field().label }}</legend>
-                <div class="row {{ rowClassName() }}">
-                @for(subField of field().fields; track subField.name) {
-                    <div class="{{ getFieldClassName(subField) }}">
-                        <app-form-field
-                            [field]="subField"
-                            [form]="nestedForm()"
-                            [layout]="layout()"
-                        ></app-form-field>
-                    </div>
-                }
+<div class="field-container d-flex flex-column">
+    @if(field().type === fieldType.Group) {
+        <fieldset [formGroup]="nestedForm()" class="mb-3">
+            <legend>{{ field().label }}</legend>
+            <div class="row {{ rowClassName() }}">
+            @for(subField of field().fields; track subField.name) {
+                <div class="{{ getFieldClassName(subField) }}">
+                    <app-form-field
+                        [field]="subField"
+                        [form]="nestedForm()"
+                        [layout]="layout()"
+                    ></app-form-field>
                 </div>
-            </fieldset>
-        } @else {
-            <ng-container [formGroup]="form()">
-                @if(labelVisible()) {
-                    <label class="form-label" [for]="field().name">
-                        {{ field().label }}
-                        @if(field().required) {
-                            *
-                        }
-                    </label>
-                }
+            }
+            </div>
+        </fieldset>
+    } @else {
+        <ng-container [formGroup]="form()">
+            @if(labelVisible()) {
+                <label class="form-label" [for]="field().name">
+                    {{ field().label }}
+                    @if(field().required) {
+                        *
+                    }
+                </label>
+            }
 
-                @switch (field().type) {
-                    @case (fieldType.Text) {
-                        <app-text-input
-                            [formControlName]="field().name"
-                            [name]="field().name"
-                            [id]="field().name"
-                            [placeholder]="field().placeholder"
-                            [isInvalid]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
-                        ></app-text-input>
-                    }
-                    @case (fieldType.Textarea) {
-                        <app-textarea
-                            [formControlName]="field().name"
-                            [name]="field().name"
-                            [id]="field().name"
-                            [placeholder]="field().placeholder"
-                            [isInvalid]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
-                        ></app-textarea>
-                    }
-                    @case (fieldType.Dropdown) {
-                        <app-select
-                            [formControlName]="field().name"
-                            [name]="field().name"
-                            [id]="field().name"
-                            [options]="field().options || []"
-                            [placeholder]="field().placeholder"
-                            [isInvalid]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
-                        ></app-select>
-                    }
-                    @case (fieldType.Checkbox) {
-                        @if(field().options && field().options!.length > 0) {
-                            <h6 *ngIf="field().label">
-                                {{ field().label }}
-                                @if(field().required) {
-                                    *
-                                }
-                            </h6>
-                            <app-checkbox-input
-                                [formControlName]="field().name"
-                                [name]="field().name"
-                                [options]="field().options || []"
-                            ></app-checkbox-input>
-                        } @else {
-                            <app-checkbox-binary-input
-                                [formControlName]="field().name"
-                                [name]="field().name"
-                                [id]="field().name"
-                                [label]="field().label"
-                            ></app-checkbox-binary-input>
-                        }
-                    }
-                    @case (fieldType.Radio) {
-                        @if(field().options!.length > 1) {
-                            <h6 *ngIf="field().label">
-                                {{ field().label }}
-                                @if(field().required) {
-                                    *
-                                }
-                            </h6>
-                        }
-                        <app-radio-input
+            @switch (field().type) {
+                @case (fieldType.Text) {
+                    <app-text-input
+                        [formControlName]="field().name"
+                        [name]="field().name"
+                        [id]="field().name"
+                        [placeholder]="field().placeholder"
+                        [isInvalid]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                    ></app-text-input>
+                }
+                @case (fieldType.Textarea) {
+                    <app-textarea
+                        [formControlName]="field().name"
+                        [name]="field().name"
+                        [id]="field().name"
+                        [placeholder]="field().placeholder"
+                        [isInvalid]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                    ></app-textarea>
+                }
+                @case (fieldType.Dropdown) {
+                    <app-select
+                        [formControlName]="field().name"
+                        [name]="field().name"
+                        [id]="field().name"
+                        [options]="field().options || []"
+                        [placeholder]="field().placeholder"
+                        [isInvalid]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                    ></app-select>
+                }
+                @case (fieldType.Checkbox) {
+                    @if(field().options && field().options!.length > 0) {
+                        <h6 *ngIf="field().label">
+                            {{ field().label }}
+                            @if(field().required) {
+                                *
+                            }
+                        </h6>
+                        <app-checkbox-input
                             [formControlName]="field().name"
                             [name]="field().name"
                             [options]="field().options || []"
-                        ></app-radio-input>
-                    }
-                    @case (fieldType.TextCustomValidation) {
-                        <app-text-input
+                        ></app-checkbox-input>
+                    } @else {
+                        <app-checkbox-binary-input
                             [formControlName]="field().name"
                             [name]="field().name"
                             [id]="field().name"
-                            [placeholder]="field().placeholder"
-                            [isInvalid]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
-                        ></app-text-input>
+                            [label]="field().label"
+                        ></app-checkbox-binary-input>
                     }
                 }
+                @case (fieldType.Radio) {
+                    @if(field().options!.length > 1) {
+                        <h6 *ngIf="field().label">
+                            {{ field().label }}
+                            @if(field().required) {
+                                *
+                            }
+                        </h6>
+                    }
+                    <app-radio-input
+                        [formControlName]="field().name"
+                        [name]="field().name"
+                        [options]="field().options || []"
+                    ></app-radio-input>
+                }
+                @case (fieldType.TextCustomValidation) {
+                    <app-text-input
+                        [formControlName]="field().name"
+                        [name]="field().name"
+                        [id]="field().name"
+                        [placeholder]="field().placeholder"
+                        [isInvalid]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                    ></app-text-input>
+                }
+            }
 
-                <app-field-error
-                    [validations]="field().validations"
-                    [errors]="form().get(field().name)?.errors ?? null"
-                    [visible]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
-                ></app-field-error>
-            </ng-container>
-        }
-    </div>
-}
+            <app-field-error
+                [validations]="field().validations"
+                [errors]="form().get(field().name)?.errors ?? null"
+                [visible]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+            ></app-field-error>
+        </ng-container>
+    }
+</div>

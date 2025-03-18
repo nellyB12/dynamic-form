@@ -1,7 +1,8 @@
-import { Component, input, computed } from '@angular/core';
+import { Component, input, computed, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { FieldType, FormField, Layout } from '../dynamic-form-builder.model';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldErrorComponent } from '../field-error/field-error.component';
 import { TextInputComponent } from '../text-input/text-input.component';
 import { TextareaComponent } from '../textarea/textarea.component';
@@ -10,6 +11,8 @@ import { CheckboxInputComponent } from "../checkbox-input/checkbox-input.compone
 import { CheckboxBinaryInputComponent } from "../checkbox-binary-input/checkbox-binary-input.component";
 import { SelectComponent } from '../select/select.component';
 import { LayoutFactoryService } from '../layout-factory.service';
+import { ValidationFactoryService } from '../validation-factory.service';
+import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
 
 @Component({
   selector: 'app-form-field',
@@ -17,7 +20,7 @@ import { LayoutFactoryService } from '../layout-factory.service';
   templateUrl: './form-field.component.html',
   styleUrl: './form-field.component.scss',
 })
-export class FormFieldComponent {
+export class FormFieldComponent implements OnInit, OnDestroy {
   public field = input.required<FormField>();
   public form = input.required<FormGroup>();
   public layout = input<Layout | null>();
@@ -35,19 +38,72 @@ export class FormFieldComponent {
     }
     return `gx-${horizontalGutter} gy-${verticalGutter}`;
   });
-  public isVisible = computed(() => this.field()?.visible ?? true);
   public nestedForm = computed(() => this.form().get(this.field().name)! as FormGroup);
   public labelVisible = computed(() => {
     const exludedTypes = [FieldType.Checkbox, FieldType.Radio];
     if(!exludedTypes.includes(this.field().type)) {
       return true;
     }
-    return this.field().options!.length == 1;
+    return false;
   });
   public readonly fieldType = FieldType;
   public readonly defaultDropdownPlaceholder = 'Please select';
+  private subscription: Subscription = new Subscription();
 
-  constructor(private layoutFactoryService: LayoutFactoryService) {}
+  constructor(
+    private layoutFactoryService: LayoutFactoryService,
+    private validationFactoryService: ValidationFactoryService,
+    private dynamicFormBuilderService: DynamicFormBuilderService
+  ) {}
+
+  ngOnInit() {
+    const targetFieldNames = this.validationFactoryService.getSourceFieldTarget(this.field().name);
+    if(targetFieldNames) {
+      for(let targetFieldName of targetFieldNames) {
+        this.subscription.add(
+          this.form().get(this.field().name)?.valueChanges.subscribe((newValue) => {
+            setTimeout(() => {
+              // need to calculate validators of targetFieldName after change the layout and fields visibility
+              const newTargetValidators = this.dynamicFormBuilderService.calcValidatorsForTargetFieldOnValueChange(
+                targetFieldName,
+                this.form().getRawValue()
+              );
+              if(newTargetValidators) {
+                const targetControl = this.getTargetControl(this.form(), targetFieldName);
+                targetControl?.clearValidators();
+                targetControl?.markAsUntouched();
+                targetControl?.addValidators(newTargetValidators);
+                targetControl?.updateValueAndValidity();
+              }
+            }, 500);
+          })
+        );
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  private getTargetControl(form: FormGroup, targetFieldName: string) {
+    const control = form.get(targetFieldName);
+    if(control) {
+      return control;
+    }
+    let found = null;
+    let current: AbstractControl | null;
+    Object.keys(form.controls).forEach((key) => {
+      if(!current && form.get(key) instanceof FormGroup) {
+        const childForm = form.get(key)! as FormGroup;
+        current = this.getTargetControl(childForm, targetFieldName);
+        if(current) {
+          found = current;
+        }
+      }
+    });
+    return found;
+  }
 
   public onCheckboxChange(event: Event, fieldName: string, optionValue: string) {
     const control = this.form().get(fieldName);

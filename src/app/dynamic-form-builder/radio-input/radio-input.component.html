@@ -6,6 +6,7 @@
             [name]="name()"
             [inputId]="option.value"
             [value]="option"
+            (onBlur)="onBlur()"
             size="small"
         ></p-radiobutton>
         <label class="form-label" [for]="option.value">{{ option.label }}</label>

@@ -20,7 +20,7 @@ export class TextInputComponent implements ControlValueAccessor {
   public placeholder = input<string>();
   public isInvalid = input<boolean>();
   public disabled: boolean = false;
-  public value!: string | null;
+  public value?: string;
   public onChange?: (value: string) => void;
   public onTouched?: () => void;
 

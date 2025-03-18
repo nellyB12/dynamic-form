@@ -1,18 +1,27 @@
 export enum ValidationType {
-	Required = 'required',
-	RequiredTrue = 'requiredTrue',
-	MinLength = 'minLength',
-	MaxLength = 'maxLength',
-	Min = 'min',
-	Max = 'max',
-	Email = 'email',
-	Pattern = 'pattern'
+	Required = "required",
+	RequiredTrue = "requiredTrue",
+	MinLength = "minLength",
+	MaxLength = "maxLength",
+	Min = "min",
+	Max = "max",
+	Email = "email",
+	Pattern = "pattern",
+	SsnCheck = "ssnCheck",
+	Passport = "passport",
+	Vat = "vat"
+}
+
+export interface ValidationCheck {
+	field: string;
+	value: any;
 }
 
 export interface Validation {
     type: ValidationType;
     value?: string | number | RegExp;
     message: string;
+	when?: ValidationCheck;
 }
 
 export enum FieldType {
@@ -57,6 +66,11 @@ export interface OptionItem {
 	checked?: boolean;
 }
 
+export interface VisibleCheck {
+	field: string;
+	value: any;
+}
+
 export interface FormField {
 	name: string;
 	type: FieldType;
@@ -67,7 +81,7 @@ export interface FormField {
 	required?: boolean;
 	options?: OptionItem[];
 	value?: any;
-	visible: boolean;
+	visibleIf?: VisibleCheck;
 	validations: Validation[];
 	fields: FormField[];
 }
