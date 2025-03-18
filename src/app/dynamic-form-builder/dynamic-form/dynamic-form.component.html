@@ -6,7 +6,7 @@
             }
             <div class="row {{ rowClassName() }}">
                 @for(field of fields(); track field.name) {
-                    @if(field.visible) {
+                    @if(isVisible(field)) {
                         <div class="{{ getFieldClassName(field) }}">
                             <app-form-field [field]="field" [form]="form" [layout]="layout()"></app-form-field>
                         </div>

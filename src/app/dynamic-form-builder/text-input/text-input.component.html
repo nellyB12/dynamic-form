@@ -4,7 +4,7 @@
     [name]="name()"
     [id]="id()"
     type="text"
-    [placeholder]="placeholder()"
+    [placeholder]="placeholder() || ''"
     (blur)="onBlur()"
     [ngClass]="{'invalid': isInvalid()}"
     pInputText

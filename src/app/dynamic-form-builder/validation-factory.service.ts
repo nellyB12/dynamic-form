@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ValidationType } from './dynamic-form-builder.model';
-import { ValidatorFn, Validators } from '@angular/forms';
+import { ValidationType, FormField, FieldType } from './dynamic-form-builder.model';
+import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ValidationFactoryService {
   private validationMap: Map<string, (arg?: string | number | RegExp) => ValidatorFn | undefined>;
+  private sourceFieldsMap: Map<string, Set<string>> = new Map([]);
 
   constructor() {
     this.validationMap = new Map<string, (arg?: string | number | RegExp) => ValidatorFn | undefined>([
@@ -18,7 +19,10 @@ export class ValidationFactoryService {
       [ValidationType.Min, (arg) => this.createMinValidation(arg)],
       [ValidationType.Max, (arg) => this.createMaxValidation(arg)],
       [ValidationType.Email, () => Validators.email],
-      [ValidationType.Pattern, (arg) => this.createPatternValidation(arg)]
+      [ValidationType.Pattern, (arg) => this.createPatternValidation(arg)],
+      [ValidationType.SsnCheck, () => this.createSsnCheckValidation()],
+      [ValidationType.Passport, () => this.createPassportValidation()],
+      [ValidationType.Vat, () => this.createVatValidation()]
     ]);
   }
 
@@ -84,6 +88,39 @@ export class ValidationFactoryService {
     return;
   }
 
+  private createSsnCheckValidation(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+        if (!control.value) {
+            return null;
+        }
+        const testPattern = '^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$';
+        const controlIsValid = new RegExp(testPattern).test(control.value);
+        return controlIsValid ? null : { ssnCheck: true };
+    };
+  }
+
+  private createPassportValidation() {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (!control.value) {
+          return null;
+      }
+      const testPattern = '^[a-zA-Z0-9]+$';
+      const controlIsValid = new RegExp(testPattern).test(control.value);
+      return controlIsValid ? null : { passport: true };
+    };
+  }
+
+  private createVatValidation() {
+    return (control: AbstractControl): { [key: string]: boolean } | null => {
+      if (!control.value) {
+          return null;
+      }
+      const testPattern = '^[a-zA-Z0-9]+$';
+      const controlIsValid = new RegExp(testPattern).test(control.value);
+      return controlIsValid ? null : { vat: true };
+    };
+  }
+
   public getValidatorFn(key: string, params?: any): ValidatorFn | undefined {
     const creator = this.validationMap.get(key);
     if (!creator) {
@@ -95,5 +132,30 @@ export class ValidationFactoryService {
     return validation instanceof Function
       ? validation
       : undefined;
+  }
+
+  public calcDynamicSourceFields(fields: FormField[]) {
+    fields.forEach((field: FormField) => {
+      if(field.type === FieldType.Group) {
+        this.calcDynamicSourceFields(field.fields);
+      } else {
+        if(field?.validations) {
+          field.validations.forEach((validation) => {
+            if(validation.when?.field) {
+              const foundField = this.sourceFieldsMap?.get(validation.when?.field);
+              if(!foundField) {
+                this.sourceFieldsMap.set(validation.when?.field, new Set([field.name]));
+              } else {
+                this.sourceFieldsMap.get(validation.when?.field)?.add(field.name);
+              }
+            }
+          });
+        }
+      }
+    });
+  }
+
+  public getSourceFieldTarget(key: string): Set<string> | undefined {
+    return this.sourceFieldsMap?.get(key);
   }
 }

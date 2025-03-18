@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { FormFieldComponent } from '../form-field/form-field.component';
 import { ButtonComponent } from '../button/button.component';
 import { LayoutFactoryService } from '../layout-factory.service';
+import { VisibilityFactoryService } from '../visibility-factory.service';
+import { ValidationFactoryService } from '../validation-factory.service';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -38,7 +40,12 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   public readonly defaultButtonLabel = 'Submit';
   public readonly fieldType = FieldType;
 
-  constructor(private dynamicFormBuilderService: DynamicFormBuilderService, private layoutFactoryService: LayoutFactoryService) {}
+  constructor(
+    private dynamicFormBuilderService: DynamicFormBuilderService,
+    private layoutFactoryService: LayoutFactoryService,
+    private visibilityFactoryService: VisibilityFactoryService,
+    private validationFactoryService: ValidationFactoryService
+  ) {}
 
   ngOnInit() {
     this.subscription.add(this.dynamicFormBuilderService.currentState$.subscribe({
@@ -49,6 +56,9 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         this.layout.set(currentState?.layout ?? null);
         if(currentState) {
           this.form = this.dynamicFormBuilderService.createNewForm(currentState);
+          this.visibilityFactoryService.initFieldsMap(this.fields(), this.form);
+          // dynamic validations init
+          this.validationFactoryService.calcDynamicSourceFields(this.fields());
         }
       }
     }));
@@ -68,5 +78,9 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   public getFieldClassName(field: FormField) {
     return this.layoutFactoryService.getColumnClassName(field.width, this.layout()?.breakpoint);
+  }
+
+  public isVisible(field: FormField): boolean {
+    return this.visibilityFactoryService.getFieldVisibility(field.name, field?.visibleIf?.field, field?.visibleIf?.value);
   }
 }

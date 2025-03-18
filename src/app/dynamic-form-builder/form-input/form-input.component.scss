@@ -1,0 +1,11 @@
+$label-color: #4a4a4a;
+
+:host {
+    .form-label {
+        font-size: 14px;
+        line-height: 1.2;
+        color: $label-color;
+        font-weight: 500;
+        margin-bottom: 6px;
+    }
+}
