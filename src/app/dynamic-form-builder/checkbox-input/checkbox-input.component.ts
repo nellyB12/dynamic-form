@@ -24,8 +24,12 @@ export class CheckboxInputComponent implements ControlValueAccessor {
 
   constructor() {}
 
-  public writeValue(value: string[]) {
-    this.selectedOptions = this.options()?.filter((option) => value.includes(option.value));
+  public writeValue(value: string[] | boolean) {
+    if(typeof value === "boolean") {
+      this.selectedOptions = [];
+    } else {
+      this.selectedOptions = this.options()?.filter((option) => value?.includes(option.value));
+    }
   }
 
   public registerOnChange(fn: (value: any) => void): void {

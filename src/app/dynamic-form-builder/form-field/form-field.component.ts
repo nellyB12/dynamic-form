@@ -1,7 +1,7 @@
-import { Component, input, computed, OnInit, OnDestroy } from '@angular/core';
+import { Component, input, computed, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
-import { FieldType, FormField, Layout } from '../dynamic-form-builder.model';
+import { Observable, Subscription, of } from 'rxjs';
+import { FieldType, FormField, Layout, OptionItem } from '../dynamic-form-builder.model';
 import { AbstractControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldErrorComponent } from '../field-error/field-error.component';
 import { TextInputComponent } from '../text-input/text-input.component';
@@ -13,6 +13,7 @@ import { SelectComponent } from '../select/select.component';
 import { LayoutFactoryService } from '../layout-factory.service';
 import { ValidationFactoryService } from '../validation-factory.service';
 import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
+import { DataApiService } from '../data-api.service';
 
 @Component({
   selector: 'app-form-field',
@@ -23,6 +24,7 @@ import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
 export class FormFieldComponent implements OnInit, OnDestroy {
   public field = input.required<FormField>();
   public form = input.required<FormGroup>();
+  public fieldApiOptions = signal<OptionItem[] | undefined>(undefined);
   public layout = input<Layout | null>();
   public rowClassName = computed(() => {
     if(!this.layout()?.gutters) {
@@ -53,10 +55,27 @@ export class FormFieldComponent implements OnInit, OnDestroy {
   constructor(
     private layoutFactoryService: LayoutFactoryService,
     private validationFactoryService: ValidationFactoryService,
-    private dynamicFormBuilderService: DynamicFormBuilderService
+    private dynamicFormBuilderService: DynamicFormBuilderService,
+    private dataApiService: DataApiService
   ) {}
 
   ngOnInit() {
+    if(this.field().lookupApi) {
+      this.subscription.add(
+        this.dataApiService.apiLookupCall(this.field().lookupApi!).subscribe((response) => {
+          if(response?.data) {
+            const options = response.data.map((option: any) => {
+              return {
+                label: option.name,
+                value: option.code
+              }
+            });
+            this.fieldApiOptions.set(options);
+          }
+        })
+      );
+    }
+
     const targetFieldNames = this.validationFactoryService.getSourceFieldTarget(this.field().name);
     if(targetFieldNames) {
       for(let targetFieldName of targetFieldNames) {
@@ -105,19 +124,24 @@ export class FormFieldComponent implements OnInit, OnDestroy {
     return found;
   }
 
-  public onCheckboxChange(event: Event, fieldName: string, optionValue: string) {
-    const control = this.form().get(fieldName);
-    const currentValue = control?.value as string[];
-    const target = event.currentTarget as HTMLInputElement;
-    if(target.checked) {
-      currentValue.push(optionValue);
-    } else {
-      const optionIndex = currentValue.findIndex((el) => el === optionValue);
-      if(optionIndex > -1) {
-        currentValue.splice(optionIndex, 1);
-      }
+  public getOptions(): OptionItem[] {
+    if(this.fieldApiOptions()) {
+      return this.fieldApiOptions()!;
     }
-    control?.setValue(currentValue);
+    if(this.field().options) {
+      return this.field().options!;
+    }
+    return [];
+  }
+
+  public getRadioOptions(): Observable<OptionItem[]> {
+    if(this.fieldApiOptions()) {
+      return of(this.fieldApiOptions()!);
+    }
+    if(this.field().options) {
+      return of(this.field().options!);
+    }
+    return  of([]);
   }
 
   public getFieldClassName(field: FormField) {
