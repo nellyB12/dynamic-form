@@ -137,7 +137,7 @@ export class ValidationFactoryService {
   public calcDynamicSourceFields(fields: FormField[]) {
     fields.forEach((field: FormField) => {
       if(field.type === FieldType.Group) {
-        this.calcDynamicSourceFields(field.fields);
+        this.calcDynamicSourceFields(field.fields!);
       } else {
         if(field?.validations) {
           field.validations.forEach((validation) => {

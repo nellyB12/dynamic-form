@@ -27,6 +27,10 @@ export class DynamicFormBuilderService {
     this._formValue.next(value);
   }
 
+  public get formValue() {
+    return this._formValue.getValue();
+  }
+
   public createNewForm(state: State): FormGroup {
     const group = new FormGroup({});
     const fieldValues = this.calcInitialFieldValues(state.fields);
@@ -58,7 +62,7 @@ export class DynamicFormBuilderService {
     }
     fields.forEach((field) => {
       if(field.type == FieldType.Group) {
-        fieldValues[field.name] = this.calcInitialFieldValues(field.fields);
+        fieldValues[field.name] = this.calcInitialFieldValues(field.fields!);
       } else {
         fieldValues[field.name] = field?.value ?? null;
       }
@@ -137,7 +141,7 @@ export class DynamicFormBuilderService {
     let current: Validation[] | undefined;
     fields.forEach((field) => {
       if((!current || current.length == 0) && field.type === FieldType.Group) {
-        current = this.getTargetFieldValidations(field.fields, targetFieldName);
+        current = this.getTargetFieldValidations(field.fields!, targetFieldName);
         if(current && current.length > 0) {
           found = current;
         }

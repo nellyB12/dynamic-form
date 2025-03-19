@@ -63,25 +63,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           this.validationFactoryService.calcDynamicSourceFields(this.fields());
 
           // read data from external API
-          if(currentState?.getDataApi && currentState.getDataApi.length > 0) {
-            currentState.getDataApi.forEach((dataApiUrl: string) => {
-              let apiCallFn: (url: string) => Observable<{data: any}>;
-              if(dataApiUrl === this.dataApiService.personApiUrl) {
-                apiCallFn = this.dataApiService.getCurrentUser;
-              } else if(dataApiUrl === this.dataApiService.companyApiUrl) {
-                  apiCallFn = this.dataApiService.getCurrentCompany;
-              } else {
-                throw new Error(`${dataApiUrl} API not found`);
-              }
-              if(apiCallFn) {
-                apiCallFn(dataApiUrl).subscribe((response) => {
-                  if(response?.data) {
-                    this.updateFormValueFromResponse(this.form, this.fields(), response?.data);
-                  }
-                });
-              }
-            });
-          }
+          this.readDataAndUpdateForm(currentState);
         }
       }
     }));
@@ -114,7 +96,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     fields.forEach((field: FormField) => {
       if(field.type == FieldType.Group) {
         const nestedForm = form.get(field.name)! as FormGroup;
-        this.updateFormValueFromResponse(nestedForm, field.fields, response);
+        this.updateFormValueFromResponse(nestedForm, field.fields!, response);
       } else {
         const found = Object.keys(response).includes(field.name);
         if(found) {
@@ -122,5 +104,27 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  private readDataAndUpdateForm(currentState: State) {
+    if(currentState?.getDataApi && currentState.getDataApi.length > 0) {
+      currentState.getDataApi.forEach((dataApiUrl: string) => {
+        let apiCallFn: (url: string) => Observable<{data: any}>;
+        if(dataApiUrl === this.dataApiService.personApiUrl) {
+          apiCallFn = this.dataApiService.getCurrentUser;
+        } else if(dataApiUrl === this.dataApiService.companyApiUrl) {
+            apiCallFn = this.dataApiService.getCurrentCompany;
+        } else {
+          throw new Error(`${dataApiUrl} API not found`);
+        }
+        if(apiCallFn) {
+          apiCallFn(dataApiUrl).subscribe((response) => {
+            if(response?.data) {
+              this.updateFormValueFromResponse(this.form, this.fields(), response?.data);
+            }
+          });
+        }
+      });
+    }
   }
 }

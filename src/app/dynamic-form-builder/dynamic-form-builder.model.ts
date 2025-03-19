@@ -84,7 +84,7 @@ export interface FormField {
 	value?: any;
 	visibleIf?: VisibleCheck;
 	validations: Validation[];
-	fields: FormField[];
+	fields?: FormField[];
 }
 
 export interface Layout {
