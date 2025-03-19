@@ -79,6 +79,7 @@ export interface FormField {
 	width: Width;
 	placeholder?: string;
 	required?: boolean;
+	lookupApi?: string;
 	options?: OptionItem[];
 	value?: any;
 	visibleIf?: VisibleCheck;
@@ -97,6 +98,7 @@ export interface Layout {
 export interface State {
 	name: string;
 	button: string;
+	getDataApi?: [string];
 	fields: FormField[];
 	layout?: Layout;
 }

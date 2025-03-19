@@ -2,13 +2,14 @@ import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
 import { State, FormField, FieldType, Layout } from '../dynamic-form-builder.model';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormFieldComponent } from '../form-field/form-field.component';
 import { ButtonComponent } from '../button/button.component';
 import { LayoutFactoryService } from '../layout-factory.service';
 import { VisibilityFactoryService } from '../visibility-factory.service';
 import { ValidationFactoryService } from '../validation-factory.service';
+import { DataApiService } from '../data-api.service';
 
 @Component({
   selector: 'app-dynamic-form',
@@ -44,7 +45,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
     private dynamicFormBuilderService: DynamicFormBuilderService,
     private layoutFactoryService: LayoutFactoryService,
     private visibilityFactoryService: VisibilityFactoryService,
-    private validationFactoryService: ValidationFactoryService
+    private validationFactoryService: ValidationFactoryService,
+    private dataApiService: DataApiService
   ) {}
 
   ngOnInit() {
@@ -59,6 +61,27 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
           this.visibilityFactoryService.initFieldsMap(this.fields(), this.form);
           // dynamic validations init
           this.validationFactoryService.calcDynamicSourceFields(this.fields());
+
+          // read data from external API
+          if(currentState?.getDataApi && currentState.getDataApi.length > 0) {
+            currentState.getDataApi.forEach((dataApiUrl: string) => {
+              let apiCallFn: (url: string) => Observable<{data: any}>;
+              if(dataApiUrl === this.dataApiService.personApiUrl) {
+                apiCallFn = this.dataApiService.getCurrentUser;
+              } else if(dataApiUrl === this.dataApiService.companyApiUrl) {
+                  apiCallFn = this.dataApiService.getCurrentCompany;
+              } else {
+                throw new Error(`${dataApiUrl} API not found`);
+              }
+              if(apiCallFn) {
+                apiCallFn(dataApiUrl).subscribe((response) => {
+                  if(response?.data) {
+                    this.updateFormValueFromResponse(this.form, this.fields(), response?.data);
+                  }
+                });
+              }
+            });
+          }
         }
       }
     }));
@@ -82,5 +105,22 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
 
   public isVisible(field: FormField): boolean {
     return this.visibilityFactoryService.getFieldVisibility(field.name, field?.visibleIf?.field, field?.visibleIf?.value);
+  }
+
+  private updateFormValueFromResponse(form: FormGroup, fields: FormField[], response: any) {
+    if(!response || !form || !fields) {
+      return;
+    }
+    fields.forEach((field: FormField) => {
+      if(field.type == FieldType.Group) {
+        const nestedForm = form.get(field.name)! as FormGroup;
+        this.updateFormValueFromResponse(nestedForm, field.fields, response);
+      } else {
+        const found = Object.keys(response).includes(field.name);
+        if(found) {
+          form.get(field.name)?.setValue(response[field.name]);
+        }
+      }
+    });
   }
 }

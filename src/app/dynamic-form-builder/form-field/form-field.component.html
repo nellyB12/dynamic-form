@@ -49,13 +49,13 @@
                         [formControlName]="field().name"
                         [name]="field().name"
                         [id]="field().name"
-                        [options]="field().options || []"
+                        [options]="getOptions()"
                         [placeholder]="field().placeholder"
                         [isInvalid]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
                     ></app-select>
                 }
                 @case (fieldType.Checkbox) {
-                    @if(field().options && field().options!.length > 0) {
+                    @if(getOptions().length > 0) {
                         <h6 *ngIf="field().label">
                             {{ field().label }}
                             @if(field().required) {
@@ -65,7 +65,7 @@
                         <app-checkbox-input
                             [formControlName]="field().name"
                             [name]="field().name"
-                            [options]="field().options || []"
+                            [options]="getOptions()"
                         ></app-checkbox-input>
                     } @else {
                         <app-checkbox-binary-input
@@ -77,7 +77,7 @@
                     }
                 }
                 @case (fieldType.Radio) {
-                    @if(field().options!.length > 1) {
+                    @if((getRadioOptions() | async) && (getRadioOptions() | async)!.length > 1) {
                         <h6 *ngIf="field().label">
                             {{ field().label }}
                             @if(field().required) {
@@ -85,11 +85,13 @@
                             }
                         </h6>
                     }
-                    <app-radio-input
-                        [formControlName]="field().name"
-                        [name]="field().name"
-                        [options]="field().options || []"
-                    ></app-radio-input>
+                    @if((getRadioOptions() | async) && (getRadioOptions() | async)!.length > 0) {
+                        <app-radio-input
+                            [formControlName]="field().name"
+                            [name]="field().name"
+                            [options]="(getRadioOptions() | async) || []"
+                        ></app-radio-input>
+                    }
                 }
                 @case (fieldType.TextCustomValidation) {
                     <app-text-input
