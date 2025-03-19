@@ -74,7 +74,6 @@ export interface VisibleCheck {
 export interface FormField {
 	name: string;
 	type: FieldType;
-	inputType?: any;
 	label: string;
 	width: Width;
 	placeholder?: string;

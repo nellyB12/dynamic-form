@@ -1,0 +1,155 @@
+{
+  "name": "Simple payment form",
+  "button": "Pay",
+  "layout": {
+  	"breakpoint": 992
+  },
+  "getDataApi": ["/user/23678", "/company/69023451"],
+  "fields": [
+    {
+      "name": "amount",
+      "type": "text",
+      "label": "Amount",
+      "width": 50,
+      "placeholder": "0.00",
+      "required": true,
+      "validations": [
+        { "type": "required", "message": "Amount is required" },
+        { "type": "pattern", "value": "^\\d*\\.?\\d{0,2}$", "message": "Amount should be numberic" }
+      ]
+    },
+    {
+      "name": "currency",
+      "type": "dropdown",
+      "label": "Currency",
+      "width": 50,
+      "required": true,
+      "lookupApi": "/currencies",
+      "value": null,
+      "validations": [
+        { "type": "required", "message": "Currency is required" }
+      ]
+    },
+    {
+      "name": "paymentMethod",
+      "type": "radio",
+      "label": "Payment method",
+      "width": 100,
+      "required": true,
+      "lookupApi": "/payment-method",
+      "value": "credit",
+      "validations": [
+        { "type": "required", "message": "Payment method is required" }
+      ]
+    },
+    {
+      "name": "additionalServices",
+      "type": "checkbox",
+      "label": "Additional Services",
+      "width": 100,
+      "required": false,
+      "lookupApi": "/additional-payment-options"
+    },
+    {
+      "name": "entityType",
+      "type": "dropdown",
+      "label": "Entity type",
+      "width": 33.33,
+      "required": true,
+      "lookupApi": "/entity-types",
+      "validations": [
+        { "type": "required", "message": "Entity type is required" }
+      ]
+    },
+    {
+      "name": "groupIndividual",
+      "type": "group",
+      "label" : "Personal Data",
+      "width": 100,
+      "visibleIf": {
+      	"field": "entityType",
+      	"value": "INDIVIDUAL"
+      },
+      "fields" : [
+        {
+          "name": "ssnNumber",
+          "type": "textCustomValidation",
+          "label": "SSN",
+          "width": 33.33,
+          "placeholder": "999-99-9999",
+          "required": true,
+          "validations": [
+            { "type": "required", "message": "ID Number is required", "when": { "field": "entityType", "value": "INDIVIDUAL" } },
+            { "type": "ssnCheck", "message": "Invalid SSN number, it should contains only 9 numbers", "when": { "field": "entityType", "value": "INDIVIDUAL" } }
+          ]
+        },
+        {
+          "name": "firstName",
+          "type": "text",
+          "label": "First name",
+          "width": 33.33,
+          "placeholder": "John",
+          "required": true,
+          "validations": [
+          	{ "type": "required", "message": "First name is required", "when": { "field": "entityType", "value": "INDIVIDUAL" } },
+          	{ "type": "minLength", "value": "2", "message": "First name should be at least 2 characters", "when": { "field": "entityType", "value": "INDIVIDUAL" } }
+          ]
+        },
+        {
+          "name": "lastName",
+          "type": "text",
+          "label": "Last name",
+          "width": 33.33,
+          "placeholder": "Doe",
+          "required": true,
+          "validations": [
+          	{ "type": "required", "message": "Last name is required", "when": { "field": "entityType", "value": "INDIVIDUAL" } },
+          	{ "type": "minLength", "value": "2", "message": "Last name should be at least 2 characters", "when": { "field": "entityType", "value": "INDIVIDUAL" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "groupBusiness",
+      "type": "group",
+      "label" : "Business Data",
+      "width": 100,
+      "visibleIf": {
+      	"field": "entityType",
+      	"value": "BUSINESS"
+      },
+      "fields" : [
+        {
+          "name": "vatNumber",
+          "type": "textCustomValidation",
+          "label": "VAT Number",
+          "width": 33.33,
+          "required": true,
+          "validations": [
+            { "type": "required", "message": "VAT Number is required", "when": { "field": "entityType", "value": "BUSINESS" } },
+            { "type": "vat", "message": "Invalid VAT Number, it should contains only letters and numbers", "when": { "field": "entityType", "value": "BUSINESS" } }
+          ]
+        },
+        {
+          "name": "companyName",
+          "type": "text",
+          "label": "Company name",
+          "width": 66.66,
+          "required": true,
+          "validations": [
+            { "type": "required", "message": "Company name is required", "when": { "field": "entityType", "value": "BUSINESS" } }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "deliveryNotes",
+      "type": "textarea",
+      "label": "Delivery notes",
+      "width": 100,
+      "placeholder": "Please provide more details about the delivery",
+      "required": false,
+      "validations": []
+    }
+  ]
+}
