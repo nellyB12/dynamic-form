@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormInputComponent } from './form-input.component';
-import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
+import { DynamicFormBuilderService } from '../services/dynamic-form-builder.service';
 import { FormsModule } from '@angular/forms';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { FieldType, State, ValidationType } from '../dynamic-form-builder.model';

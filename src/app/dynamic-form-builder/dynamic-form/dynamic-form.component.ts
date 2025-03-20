@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
+import { DynamicFormBuilderService } from '../services/dynamic-form-builder.service';
 import { State, FormField, FieldType, Layout, Width } from '../dynamic-form-builder.model';
 import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormFieldComponent } from '../form-field/form-field.component';
 import { ButtonComponent } from '../button/button.component';
-import { LayoutFactoryService } from '../layout-factory.service';
-import { VisibilityFactoryService } from '../visibility-factory.service';
-import { ValidationFactoryService } from '../validation-factory.service';
+import { LayoutFactoryService } from '../services/layout-factory.service';
+import { VisibilityFactoryService } from '../services/visibility-factory.service';
+import { ValidationFactoryService } from '../services/validation-factory.service';
 import { DataApiService } from '../data-api.service';
 
 @Component({

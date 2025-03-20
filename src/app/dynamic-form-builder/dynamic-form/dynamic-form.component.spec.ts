@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DynamicFormComponent } from './dynamic-form.component';
-import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
-import { LayoutFactoryService } from '../layout-factory.service';
-import { VisibilityFactoryService } from '../visibility-factory.service';
-import { ValidationFactoryService } from '../validation-factory.service';
+import { DynamicFormBuilderService } from '../services/dynamic-form-builder.service';
+import { LayoutFactoryService } from '../services/layout-factory.service';
+import { VisibilityFactoryService } from '../services/visibility-factory.service';
+import { ValidationFactoryService } from '../services/validation-factory.service';
 import { DataApiService } from '../data-api.service';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';

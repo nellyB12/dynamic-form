@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { Subscription } from 'rxjs';
-import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
+import { DynamicFormBuilderService } from '../services/dynamic-form-builder.service';
 
 @Component({
   selector: 'app-form-output',

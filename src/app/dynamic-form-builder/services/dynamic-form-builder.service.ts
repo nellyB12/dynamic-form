@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { State, FieldType, Validation, FormField } from './dynamic-form-builder.model';
+import { State, FieldType, Validation, FormField } from '../dynamic-form-builder.model';
 import { FormGroup, FormControl, ValidatorFn } from '@angular/forms';
 import { ValidationFactoryService } from './validation-factory.service';
 import { BehaviorSubject } from 'rxjs';

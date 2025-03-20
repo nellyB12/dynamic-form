@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/markdown/markdown';
-import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
+import { DynamicFormBuilderService } from '../services/dynamic-form-builder.service';
 
 @Component({
   selector: 'app-form-input',

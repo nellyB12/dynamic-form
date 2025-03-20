@@ -10,9 +10,9 @@ import { RadioInputComponent } from '../radio-input/radio-input.component';
 import { CheckboxInputComponent } from "../checkbox-input/checkbox-input.component";
 import { CheckboxBinaryInputComponent } from "../checkbox-binary-input/checkbox-binary-input.component";
 import { SelectComponent } from '../select/select.component';
-import { LayoutFactoryService } from '../layout-factory.service';
-import { ValidationFactoryService } from '../validation-factory.service';
-import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
+import { LayoutFactoryService } from '../services/layout-factory.service';
+import { ValidationFactoryService } from '../services/validation-factory.service';
+import { DynamicFormBuilderService } from '../services/dynamic-form-builder.service';
 import { DataApiService } from '../data-api.service';
 
 @Component({
