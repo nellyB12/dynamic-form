@@ -1,6 +1,6 @@
 {
   "name": "Simple payment form",
-  "button": "Pay",
+  "submitLabel": "Pay",
   "layout": {
   	"breakpoint": 992
   },

@@ -127,7 +127,7 @@ describe('DynamicFormComponent', () => {
       const testState: State = {
         fields: [firstNameFormField],
         name: 'Test Form',
-        button: 'Save',
+        submitLabel: 'Save',
         layout: { breakpoint: 992, gutters: { horizontal: 3, vertical: 4 } }
       };
       stateSubject.next(testState);

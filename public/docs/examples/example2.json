@@ -1,6 +1,6 @@
 {
   "name": "Create insurance",
-  "button": "Next",
+  "submitLabel": "Next",
   "layout": {
   	"breakpoint": 768,
   	"gutters": {

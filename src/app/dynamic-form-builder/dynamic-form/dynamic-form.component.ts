@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, signal, computed } from '@angular/core';
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
-import { State, FormField, FieldType, Layout } from '../dynamic-form-builder.model';
+import { State, FormField, FieldType, Layout, Width } from '../dynamic-form-builder.model';
 import { Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormFieldComponent } from '../form-field/form-field.component';
@@ -54,7 +54,7 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
       next: (currentState: State | null) => {
         this.fields.set(currentState?.fields ?? []);
         this.formName.set(currentState?.name ?? '');
-        this.buttonLabel.set(currentState?.button ?? this.defaultButtonLabel);
+        this.buttonLabel.set(currentState?.submitLabel ?? this.defaultButtonLabel);
         this.layout.set(currentState?.layout ?? null);
         if(currentState) {
           this.form = this.dynamicFormBuilderService.createNewForm(currentState);
@@ -82,7 +82,8 @@ export class DynamicFormComponent implements OnInit, OnDestroy {
   }
 
   public getFieldClassName(field: FormField) {
-    return this.layoutFactoryService.getColumnClassName(field.width, this.layout()?.breakpoint);
+    const fieldWidth = field?.width ?? Width.FullWidth;
+    return this.layoutFactoryService.getColumnClassName(fieldWidth, this.layout()?.breakpoint);
   }
 
   public isVisible(field: FormField): boolean {

@@ -45,7 +45,7 @@ export class DynamicFormBuilderService {
         group.addControl(field.name, nestedGroup);
         this.addControls(nestedGroup, field.fields || [], fieldValues);
       } else {
-        const validators = this.calcValidators(fieldValues, field.validations);
+        const validators = this.calcValidators(fieldValues, field?.validations);
         const control = new FormControl(
           field.value || (field.type == FieldType.Checkbox ? this.getCheckboxValues(field) : ''),
           validators

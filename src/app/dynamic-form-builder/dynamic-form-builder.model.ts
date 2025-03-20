@@ -75,19 +75,19 @@ export interface FormField {
 	name: string;
 	type: FieldType;
 	label: string;
-	width: Width;
+	width?: Width;
 	placeholder?: string;
 	required?: boolean;
 	lookupApi?: string;
 	options?: OptionItem[];
 	value?: any;
 	visibleIf?: VisibleCheck;
-	validations: Validation[];
+	validations?: Validation[];
 	fields?: FormField[];
 }
 
 export interface Layout {
-	breakpoint: Breakpoint;
+	breakpoint?: Breakpoint;
 	gutters?: {
 		horizontal: Gutter,
 		vertical: Gutter
@@ -96,7 +96,7 @@ export interface Layout {
 
 export interface State {
 	name: string;
-	button: string;
+	submitLabel?: string;
 	getDataApi?: [string];
 	fields: FormField[];
 	layout?: Layout;
