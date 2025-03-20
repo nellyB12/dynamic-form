@@ -16,12 +16,68 @@ Whenever the JSON is modified, the form will automatically re-render to reflect 
 
 #### JSON structure
 
-##### JSON state includes the following properties:
+##### Basic JSON example
+This example includes only the required fields. For full featured examples check the samples in the next section.
+```json
+{
+  "name": "Dog Breeds",
+  "fields": [
+    {
+      "name": "name",
+      "type": "text",
+      "label": "Dog Breed Name"
+    },
+    {
+      "name": "groupBreedDetails",
+      "type": "group",
+      "label": "Breed details",
+      "fields": [
+        {
+          "name": "sizeCategory",
+          "type": "dropdown",
+          "label": "Size Category",
+          "options": [
+            {
+              "value": "S",
+              "label": "Small"
+            },
+            {
+              "value": "M",
+              "label": "Medium"
+            },
+            {
+              "value": "L",
+              "label": "Large"
+            },
+            {
+              "value": "XL",
+              "label": "Extra Large"
+            }
+          ]
+        },
+        {
+          "name": "temperament",
+          "type": "textarea",
+          "label": "Temperament"
+        }
+      ]
+    }
+  ]
+}
+```
+| Preview | Result |
+| ------- | ------ |
+| ![Basic form example preview](/public/docs/images/basic-form-example-preview.png) | ![Basic form example result](/public/docs/images/basic-form-example-result.png) |
+
+##### Full featured JSON examples
+Extended JSON examples can be found [here](/public/docs/examples).
+
+##### JSON properties:
 | Name |  Type  |  Default | Required | Description |
 | ----- | -----  | -------- | -------- | ----------- |
 | name  | `string` | null     | true     | Name of the form, used as title of the result form |
-| button | `string` | 'Submit' | true    | Label of the form button, which submit the form    |
-| getDataApi | `Array<string>` | null | false | List of APIs request paths, which can be used to populate form fields on load |
+| submitLabel | `string` | 'Submit' | false    | Label of the form submit button, which submit the form    |
+| getDataApi | `Array<string>` | null | false | Data API endpoints which are used to populate form fields if matched by form field name |
 | fields | `Array<FormField>` | [] | true | Array of all form fields, which represents the form controls |
 | layout | `Layout` | null | false | Layout configuration to customize the UI of the generated form |
 
@@ -32,7 +88,7 @@ Whenever the JSON is modified, the form will automatically re-render to reflect 
 | name | `string` | null | true | Control name in the result form. |
 | type | `FieldType` | null | true | Control type, which manage the input type of the html element. |
 | label | `string` | null | true | Control label on the top of the form control. |
-| width | `Width` | null | true | Form control width, when place the control in the form layout on rows and columns. |
+| width | `Width` | 100 | false | Form control width, when place the control in the form layout on rows and columns. |
 | placeholder | `string` | null | false | Placeholder of the form control. |
 | required | `boolean` | null | false | Manage form control as required - add * to the form label on UI. |
 | lookupApi | `string` | null | false | API request url to be used to fetch options of the form control. Each option must be in format `{ name: string; code: string }`. Applicable for radio buton groups, checkbox groups, dropdown. If not provided, use `options` property instead. |
@@ -81,8 +137,6 @@ To demonstrate auto-fill of personal / business data, the following mocked API c
   * '/user/23678' - return a Person object
   * '/company/69023451' - return a Company object
 
-JSON examples can be found [here](/public/docs/examples).
-
 ### Form
 
 Generated reactive form may includes different types of controls, nested form groups are supported too.
@@ -91,7 +145,7 @@ Form control validations can be dynamically changed depeding of other form contr
 
 #### Dynamic form control visibility
 To manage dynamic visibility use `visibleIf` property of single field in the JSON input.
-It accepts an object width following properties:
+It accepts an object with following properties:
   * field: `string` (field name of source control)
   * value: `any` (value of source form control)
 When the form detect changes on the source control value, it trigger checking of the target control visibility, depending of the value exact match the current source control value.
@@ -168,6 +222,16 @@ Control with name "lastName" will have required validation and minLength(2) vali
     ]
 }
 ```
+
+#### Layout management (UI customizations)
+
+To manage the UI of the generated form, use `layout` property - object with following parameters:
+  * breakpoint - supports 576 | 768 | 992 | 1200 | 1400
+  * gutters (otpional):
+    * horizontal - supports 0 | 1 | 2 | 3 | 4 | 5
+    * vertical - supports 0 | 1 | 2 | 3 | 4 | 5
+The breakpoint is used to manage the minimum screen width, when the form controls displaying in columns for desktop view. On smaller screens all form controls appears as full width controls (1 control per row). When "breakpoint" is not provided, on all screen sizes the fields have the same width, defined in the form field configuration.
+Horizontal and vertical gutters are optional, they manage the horizontal and vertical distance between form controls in the layout. When not provided, the application set horizontal gutter as 3 and vertical gutter as 4. Check the bootstrap version 5 documentation for default gutters and their values.
 
 ### Output
 

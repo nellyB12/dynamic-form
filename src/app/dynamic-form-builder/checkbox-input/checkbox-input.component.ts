@@ -28,7 +28,13 @@ export class CheckboxInputComponent implements ControlValueAccessor {
     if(typeof value === "boolean") {
       this.selectedOptions = [];
     } else {
-      this.selectedOptions = this.options()?.filter((option) => value?.includes(option.value));
+      const newOptions: OptionItem[] = [];
+      this.options().forEach((option) => {
+        if(value.includes(option.value)) {
+          newOptions.push(option);
+        }
+      })
+      this.selectedOptions = newOptions;
     }
   }
 

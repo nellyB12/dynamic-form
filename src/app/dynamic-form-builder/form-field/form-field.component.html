@@ -52,6 +52,7 @@
                         [options]="getOptions()"
                         [placeholder]="field().placeholder"
                         [isInvalid]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
+                        #select
                     ></app-select>
                 }
                 @case (fieldType.Checkbox) {
@@ -105,7 +106,7 @@
             }
 
             <app-field-error
-                [validations]="field().validations"
+                [validations]="field().validations || []"
                 [errors]="form().get(field().name)?.errors ?? null"
                 [visible]="form().get(field().name)?.invalid && form().get(field().name)?.touched"
             ></app-field-error>

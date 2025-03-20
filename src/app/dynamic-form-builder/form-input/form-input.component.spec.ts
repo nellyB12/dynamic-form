@@ -7,7 +7,7 @@ import { FieldType, State, ValidationType } from '../dynamic-form-builder.model'
 
 const validJsonOne = `{
   "name": "Simple form",
-  "button": "Next",
+  "submitLabel": "Next",
   "layout": {
   	"breakpoint": 768,
   	"gutters": {
@@ -32,7 +32,7 @@ const validJsonOne = `{
 
 const parsedJsonOne: State = {
   name: "Simple form",
-  button: "Next",
+  submitLabel: "Next",
   layout: {
   	breakpoint: 768,
   	gutters: {

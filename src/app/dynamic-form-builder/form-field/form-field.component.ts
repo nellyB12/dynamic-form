@@ -1,7 +1,7 @@
-import { Component, input, computed, signal, OnInit, OnDestroy } from '@angular/core';
+import { Component, input, computed, signal, OnInit, OnDestroy, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, Subscription, of } from 'rxjs';
-import { FieldType, FormField, Layout, OptionItem } from '../dynamic-form-builder.model';
+import { FieldType, FormField, Layout, OptionItem, Width } from '../dynamic-form-builder.model';
 import { AbstractControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FieldErrorComponent } from '../field-error/field-error.component';
 import { TextInputComponent } from '../text-input/text-input.component';
@@ -22,6 +22,7 @@ import { DataApiService } from '../data-api.service';
   styleUrl: './form-field.component.scss',
 })
 export class FormFieldComponent implements OnInit, OnDestroy {
+  public selectControl = viewChild<SelectComponent>(SelectComponent);
   public field = input.required<FormField>();
   public form = input.required<FormGroup>();
   public fieldApiOptions = signal<OptionItem[] | undefined>(undefined);
@@ -71,6 +72,13 @@ export class FormFieldComponent implements OnInit, OnDestroy {
               }
             });
             this.fieldApiOptions.set(options);
+
+            // manage field value of dropdown field type
+            if(this.field().type === FieldType.Dropdown && this.field().value) {
+              setTimeout(() => {
+                this.selectControl()!.writeValue(this.field().value);
+              }, 100);
+            }
           }
         })
       );
@@ -145,6 +153,7 @@ export class FormFieldComponent implements OnInit, OnDestroy {
   }
 
   public getFieldClassName(field: FormField) {
-    return this.layoutFactoryService.getColumnClassName(field.width, this.layout()?.breakpoint);
+    const fieldWidth = field?.width ?? Width.FullWidth;
+    return this.layoutFactoryService.getColumnClassName(fieldWidth, this.layout()?.breakpoint);
   }
 }
