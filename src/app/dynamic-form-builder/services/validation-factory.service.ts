@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ValidationType, FormField, FieldType } from './dynamic-form-builder.model';
+import { ValidationType, FormField, FieldType } from '../dynamic-form-builder.model';
 import { AbstractControl, ValidatorFn, Validators } from '@angular/forms';
 
 @Injectable({

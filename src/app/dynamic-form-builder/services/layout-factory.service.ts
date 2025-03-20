@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Width, Breakpoint } from './dynamic-form-builder.model';
+import { Width, Breakpoint } from '../dynamic-form-builder.model';
 
 @Injectable({
   providedIn: 'root'

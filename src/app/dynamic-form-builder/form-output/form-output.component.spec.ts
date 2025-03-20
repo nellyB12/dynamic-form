@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormOutputComponent } from './form-output.component';
-import { DynamicFormBuilderService } from '../dynamic-form-builder.service';
+import { DynamicFormBuilderService } from '../services/dynamic-form-builder.service';
 import { FormsModule } from '@angular/forms';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { BehaviorSubject } from 'rxjs';

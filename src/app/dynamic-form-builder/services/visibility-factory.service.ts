@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormField } from './dynamic-form-builder.model';
+import { FormField } from '../dynamic-form-builder.model';
 import { FormGroup } from '@angular/forms';
 
 @Injectable({
